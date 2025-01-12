@@ -1,0 +1,44 @@
+### Health Check
+GET http://localhost:5000/health
+Accept: application/json
+
+### Basic Search
+POST http://localhost:5000/search
+Content-Type: application/json
+
+{
+    "query": "When does Yoga commence? When should I start doing Yoga?",
+    "top_k": 5,
+    "alpha": 0.6
+}
+
+### Search with Custom Parameters
+POST http://localhost:5000/search
+Content-Type: application/json
+
+{
+    "query": "When does Yoga commence?",
+    "top_k": 3,
+    "alpha": 0.8
+}
+
+### Search with Only Required Parameter
+POST http://localhost:5000/search
+Content-Type: application/json
+
+{
+    "query": "When should I start doing Yoga?"
+}
+
+### Invalid Request - Missing Query
+POST http://localhost:5000/search
+Content-Type: application/json
+
+{
+    "top_k": 5,
+    "alpha": 0.6
+}
+
+### Non-existent Endpoint
+GET http://localhost:5000/nonexistent
+Accept: application/json
