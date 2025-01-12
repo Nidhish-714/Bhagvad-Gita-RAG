@@ -2,7 +2,6 @@
 
 A Retrieval-Augmented Generation (RAG) system for querying and understanding the Bhagavad Gita using hybrid search (combining dense and sparse retrieval methods).
 
-
 ## Current Accuracy is 98.4%
 
 ## Setup Instructions
@@ -29,6 +28,7 @@ pip install -r requirements.txt
 
 ### 3. Data Preparation and Embeddings
 
+The MongoDB Cluster is already ingested with data from the CSV files , make_embeddings file just creates and stores embeddings in the PineConeDB from the MongoDB documents.
 Before running queries, you need to create embeddings for the verses:
 
 ```bash
@@ -37,6 +37,7 @@ python make_embeddings.py
 ```
 
 This step will:
+
 - Process the Bhagavad Gita verses
 - Create vector embeddings
 - Store them in the vector database
@@ -54,6 +55,25 @@ python app.py
 
 You can then input your questions about the Bhagavad Gita, and the system will retrieve the most relevant verses.
 
+# Running the Application
+
+Start by running the flask server file flaskapi.py
+
+```bash
+# Run the main application
+python flaskapi.py
+```
+
+Start the frontend by running the command
+
+```bash
+# Run the main application
+cd frontend-maudifive
+npm i
+npm start
+```
+
+
 ### Testing Accuracy
 
 To evaluate the system's performance:
@@ -64,6 +84,7 @@ python testing.py
 ```
 
 This will:
+
 - Process all questions from the dataset
 - Calculate retrieval accuracy
 - Generate a detailed evaluation report
