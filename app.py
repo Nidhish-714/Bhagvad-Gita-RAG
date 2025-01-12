@@ -1,5 +1,8 @@
 from support import create_hybrid_searcher
 
+import nltk
+nltk.download('punkt_tab')
+
 # Create the hybrid searcher instance
 hybrid_searcher = create_hybrid_searcher()
 
