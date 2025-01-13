@@ -30,10 +30,21 @@ const App = () => {
         "top_k": 5,
         "alpha": 0.6
       });
+      // console.log(response)
+      // const fixedJsonString = response.replace(/NaN/g, "null");
+      // const validJson = JSON.parse(fixedJsonString);
+      let validJson="";
+      if (typeof response === 'object') {
+        validJson = response; // Already parsed JSON
+        // Process the JSON as usual
+      } else if (typeof response === 'string') {
+        const fixedJsonString = response.replace(/NaN/g, "null");
+        validJson = JSON.parse(fixedJsonString);
+        // Process the JSON as usual
+      } else {
+        throw new Error('Unexpected response type');
+      }
 
-      const fixedJsonString = response.replace(/NaN/g, "null");
-      const validJson = JSON.parse(fixedJsonString);
-      
       if (validJson.results && validJson.results.length > 0) {
         const firstResult = validJson.results[0].document;
         const botMessage = {
