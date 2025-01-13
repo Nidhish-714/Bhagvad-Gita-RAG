@@ -140,6 +140,7 @@ For any additional issues, please check the error messages or create an issue in
 
 ## Snapshots
 Frontend
+
 <img width="691" alt="{90BB27E7-5DCB-43A2-8CB0-17B0F4622C29}" src="https://github.com/user-attachments/assets/d0976bff-2d37-486b-a459-87ff801a2e34" />
 
 
