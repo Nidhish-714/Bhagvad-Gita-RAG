@@ -28,20 +28,15 @@ pip install -r requirements.txt
 
 ### 3. Data Preparation and Embeddings
 
-The MongoDB Cluster is already ingested with data from the CSV files , make_embeddings file just creates and stores embeddings in the PineConeDB from the MongoDB documents.
-Before running queries, you need to create embeddings for the verses:
+The MongoDB cluster is already populated with data from the CSV files. The `make_embeddings.py` script creates and stores embeddings in Pinecone DB from the MongoDB documents. 
+
+Before running queries, you need to create embeddings for the verses. 
+
+> **Note**: Only run the following command if you have a personal Pinecone DB; otherwise dont run it, the default cluster will be used.
 
 ```bash
-# Generate embeddings
 python make_embeddings.py
 ```
-
-This step will:
-
-- Process the Bhagavad Gita verses
-- Create vector embeddings
-- Store them in the vector database
-
 ## Usage
 
 ### Running Queries
