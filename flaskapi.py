@@ -5,6 +5,13 @@ import nltk
 import logging
 from flask_cors import CORS
 
+import os
+from groq import Groq
+
+client = Groq(
+    api_key="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",
+)
+
 # Initialize Flask app
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
@@ -43,7 +50,6 @@ def search():
 
     try:
         data = request.get_json()
-        # print(data)
         if not data or 'query' not in data:
             return jsonify({"error": "No query provided"}), 400
 
@@ -54,9 +60,52 @@ def search():
         # Perform the search
         results = hybrid_searcher.search(query, top_k=top_k, alpha=alpha)
 
+        if results:
+            first_result = results[0]  # Assuming we want the first result
+            translation = first_result.get('translation', '')  # Extract translation, default to empty string if not present
+            fullplot = first_result.get('fullplot', '')  # Extract fullplot, default to empty string if not present
+
+            # Combine them into document_text
+            document_text = f"Translation: {translation}\nFull Plot: {fullplot}"
+        else:
+            document_text = "No results found."
+        if not results:
+            return jsonify({"error": "No results found"}), 404
+
+        
+
+        if not document_text:
+            return jsonify({"error": "First result does not contain content"}), 500
+
+        # Use Groq to generate a summary
+        try:
+            chat_completion = client.chat.completions.create(
+                messages=[
+                    {"role": "system", "content": (
+                        "You are an expert in ancient Sanskrit literature and philosophy. "
+                        "Your task is to provide detailed and descriptive explanations for Sanskrit shlokas and verses. "
+                        "Focus on the meaning, context, cultural significance, and practical application in daily life."
+                    )},
+                    {"role": "user", "content": (
+                        "Below is a Sanskrit shloka or verse with its accompanying translation and description. "
+                        "Please provide an in-depth explanation covering the following aspects:\n"
+                        "- The meaning of the shloka in simple terms.\n"
+                        "- The cultural or historical context of the verse.\n"
+                        "- Any philosophical or spiritual significance.\n"
+                        "- How it can be applied in modern life.\n\n"
+                        f"{document_text}"
+                    )}
+                ],
+                model="llama-3.1-70b-versatile",
+            )
+            summary = chat_completion.choices[0].message.content
+            print(summary)
+        except Exception as e:
+            logger.error(f"Groq API error: {str(e)}")
+            summary = "Error generating summary."
+
         # Format the results
         formatted_results = []
-        print(results)
         for result in results:
             formatted_result = {
                 'score': float(result['score']),  # Ensure score is serializable
@@ -68,9 +117,11 @@ def search():
             }
             formatted_results.append(formatted_result)
 
+
         return jsonify({
             "query": query,
-            "results": formatted_results
+            "results": formatted_results,
+            "first_result_summary": summary
         })
 
     except Exception as e:
